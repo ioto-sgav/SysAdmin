@@ -1,0 +1,32 @@
+{
+  "summary": "Backend fully functional; all 7 CRUD collections, /api/dashboard, nested /systems/{id}/contacts|tasks|log_entries and seed verified. Frontend Dashboard, Systemer list, Opgaver kanban, Logbog, Kontakter, Organisationer, Indstillinger all render seeded data correctly with expected data-testid attributes and Danish labels. CRITICAL: SystemDetalje route (/systemer/:id) crashes with React runtime error 'TypeError: destroy is not a function' - the page is completely broken, blocking access to accordion sections, system contacts, per-system tasks and per-system logbog. This is a useEffect cleanup returning a non-function value (likely in SystemDetalje.jsx or a child such as KanbanBoard.jsx / an Accordion effect).",
+  "tested_scope": ["frontend", "backend", "integration"],
+  "passed": [
+    "GET /api/dashboard returns all 8 expected fields with correct counts (4 open, 1 waiting, 1 overdue, 3 systems, 2 upcoming follow-ups, 2 important tasks, 2 critical systems, 3 recent logs)",
+    "GET /api/systems returns 3 seeded systems (Ydelsessystem, Sagsbehandlingssystem, Gammelt arkivsystem)",
+    "GET /api/systems/{id}/contacts returns 3 enriched relations with contact+organization objects",
+    "GET /api/systems/{id}/tasks returns 2 tasks scoped to the system",
+    "GET /api/tasks returns 5 seeded tasks; /api/kanban_columns returns ['Todo','Doing','Done']",
+    "Dashboard UI: 4 KPI cards, 4 sections all rendered with seed data",
+    "Sidebar: all 7 nav links present with data-testid (nav-dashboard/systemer/opgaver/kontakter/organisationer/logbog/indstillinger)",
+    "Systemer list: table shows 3 systems with search input (systemer-sog), status filter, kritikalitet filter, and system-row-{id} testids",
+    "Opgaver page: Todo/Doing/Done columns visible with 'Tilføj kolonne' and 'Ny opgave' controls",
+    "Logbog page renders with 'Kun med opfølgning' filter and seeded entries",
+    "Kontakter and Organisationer pages render all seeded rows",
+    "Indstillinger displays static informational content"
+  ],
+  "failed": [
+    {
+      "area": "frontend / SystemDetalje route",
+      "issue": "Navigating to /systemer/:id triggers Uncaught runtime error: 'TypeError: destroy is not a function' in commitHookEffectListUnmount. Nothing renders - no accordion sections, no data-testid elements on the page. Blocks all system-detail testing (accordions, Kontakter på systemet dialog, per-system kanban scoping, per-system log).",
+      "evidence": "React error overlay caught in browser; stack points to react commit phase (commitHookPassiveUnmountEffects). testid count on route = 0. Body text is empty of all expected labels ('Systemoverblik', 'Kontakter', 'Opgaver', 'Logbog', 'Ydelsessystem' all False).",
+      "priority": "HIGH"
+    }
+  ],
+  "action_items": [
+    "Fix the useEffect in /app/frontend/src/pages/SystemDetalje.jsx (and/or child components like KanbanBoard.jsx / Accordion) that returns a non-function cleanup. Common causes: (a) `useEffect(async () => {...})` – async effects must not be passed directly; wrap async work inside and return void or a sync cleanup; (b) returning a Promise, boolean, or object from the effect; (c) conditional return that returns a value (e.g., `if (x) return x;`) instead of a function. After fix, re-verify accordion expand/collapse, 'Tilføj kontakt' dialog, kanban scoped to system, and system-specific logbog rendering."
+  ],
+  "success_rate": {"backend": "100%", "frontend": "~85% (SystemDetalje broken)"},
+  "retest_needed": true,
+  "full_testing_deferred": true
+}

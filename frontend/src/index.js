@@ -1,15 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import "@/index.css";
-import App from "@/App";
+import "./index.css";
+import App from "./App";
 
 const queryClient = new QueryClient({
   defaultOptions: {
-    queries: {
-      staleTime: 60_000,
-      refetchOnWindowFocus: false,
-    },
+    queries: { staleTime: 30_000, refetchOnWindowFocus: false },
   },
 });
 
@@ -19,5 +16,5 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <App />
     </QueryClientProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 );
