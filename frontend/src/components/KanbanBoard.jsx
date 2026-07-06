@@ -14,7 +14,7 @@ import {
  * Kanban board component.
  * If systemId is provided, board is scoped to that system.
  */
-export default function KanbanBoard({ systemId = null, systems = [], onReload }) {
+export default function KanbanBoard({ systemId = null, systems = [], onReload, systemFilter = null, openCreateSignal = 0 }) {
   const [columns, setColumns] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [newColName, setNewColName] = useState("");

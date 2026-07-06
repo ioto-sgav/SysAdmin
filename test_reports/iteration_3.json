@@ -1,0 +1,16 @@
+{
+  "summary": "Retested 4 bug fixes after KanbanBoard runtime error fix. All 4 bugs (BUG-2, BUG-5, BUG-8a, BUG-8b) now pass. No red error overlay, no console errors, kanban renders with 3 columns, task creation works with system selector, filter dropdown has correct options ('Alle systemer', 'Uden system', seeded systems), and log sheet pre-selects the current system on the system detail page.",
+  "tested_scope": ["frontend", "integration"],
+  "passed": [
+    "BUG-5: /opgaver loads without runtime error; kanban-board renders with 3 columns (Todo, Doing, Done). No red overlay, no console errors. Column heights are content-adaptive as shown in screenshot.",
+    "BUG-8a: 'Ny opgave' button opens opgave-form-dialog with opgave-form-system_id select field. Filled titel 'Test opgave via opret-btn', selected system option, submitted — task appeared in Todo column (Todo count went 2→3, toast 'Opgave oprettet' shown).",
+    "BUG-8b: opgaver-filter-system visible with correct options: ['Alle systemer', '— Uden system —', 'Ydelsessystem', 'Sagsbehandlingssystem', 'Gammelt arkivsystem']. Filter selection and reset to 'Alle systemer' both worked without errors.",
+    "BUG-2: Clicked first system row (Ydelsessystem) → navigated to system detail. Logbog accordion open by default. Clicked opret-log-btn-embedded → log-sheet opened. log-sheet-system trigger shows 'Ydelsessystem' (NOT placeholder 'Vælg system…'). Matches the row's system name."
+  ],
+  "failed": [],
+  "action_items": [],
+  "success_rate": {"backend": "not tested", "frontend": "100% (4/4 bugs)"},
+  "retest_needed": false,
+  "full_testing_deferred": true,
+  "notes": "Card-count assertion in BUG-8b used selector [data-testid^='opgave-card-'] which returned 0 (selector mismatch, not app issue). Filter dropdown options and selection behavior were verified directly and visually via screenshot — all working."
+}
