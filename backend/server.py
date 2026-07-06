@@ -1,7 +1,6 @@
 from fastapi import FastAPI, APIRouter, HTTPException
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
@@ -9,13 +8,12 @@ from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional
 import uuid
 from datetime import datetime, timezone, date
+from sqlite_adapter import get_db
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+db = get_db()
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
@@ -432,4 +430,5 @@ async def startup_seed():
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
-    client.close()
+    # SQLite: nothing persistent to close (connections opened per-op)
+    pass
