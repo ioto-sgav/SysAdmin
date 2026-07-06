@@ -133,7 +133,8 @@ class LogEntryModel(BaseModel):
     kontakt_id: Optional[str] = None
     organization_id: Optional[str] = None
     officielt_link: Optional[str] = None
-    detaljer: Optional[str] = None
+    detaljer: Optional[str] = None              # HTML from TipTap
+    draft: bool = False
     created_at: str = Field(default_factory=now_iso)
 
 

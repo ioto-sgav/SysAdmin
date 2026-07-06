@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
-import { LayoutDashboard, Server, ClipboardList, Users, Building2, BookText, Settings } from "lucide-react";
+import { LayoutDashboard, Server, ClipboardList, Users, Building2, BookText, Settings, StickyNote, Plus } from "lucide-react";
+import { useLogEntry } from "./LogEntryProvider";
 
 const navItems = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, testid: "nav-dashboard", end: true },
@@ -13,6 +14,8 @@ const navItems = [
 ];
 
 export default function Layout() {
+  const logCtx = useLogEntry();
+
   return (
     <div className="min-h-screen bg-stone-50">
       <aside
@@ -43,6 +46,31 @@ export default function Layout() {
             </NavLink>
           ))}
         </nav>
+
+        <div className="px-3 pb-3 space-y-2">
+          <button
+            onClick={() => logCtx?.openNew()}
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-blue-300"
+            title="Hurtig logbogsnote (Ctrl+K)"
+            data-testid="quick-log-btn"
+          >
+            <Plus className="h-4 w-4" />
+            <span>Ny logbogsnote</span>
+            <kbd className="ml-auto text-[10px] text-slate-400 border border-slate-200 rounded px-1 py-0.5">Ctrl+K</kbd>
+          </button>
+
+          {logCtx?.activeDraftTitle && (
+            <button
+              onClick={() => logCtx.reopenActiveDraft()}
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium bg-amber-50 text-amber-900 border border-amber-200 hover:bg-amber-100"
+              data-testid="active-note-pill"
+            >
+              <StickyNote className="h-4 w-4 shrink-0" />
+              <span className="truncate text-left">{logCtx.activeDraftTitle}</span>
+            </button>
+          )}
+        </div>
+
         <div className="px-6 py-4 border-t border-slate-200 text-xs text-slate-500">
           Personligt arbejdsredskab · v1
         </div>

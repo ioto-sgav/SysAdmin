@@ -58,6 +58,22 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
 
+/* TipTap prose placeholder */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #94a3b8;
+  pointer-events: none;
+  height: 0;
+}
+.ProseMirror:focus { outline: none; }
+.ProseMirror ul { list-style: disc; padding-left: 1.25rem; }
+.ProseMirror ol { list-style: decimal; padding-left: 1.25rem; }
+.ProseMirror h2 { font-size: 1.15rem; font-weight: 600; margin-top: 0.5rem; }
+.ProseMirror h3 { font-size: 1rem; font-weight: 600; margin-top: 0.4rem; }
+.ProseMirror blockquote { border-left: 3px solid #cbd5e1; padding-left: 0.75rem; color: #475569; }
+.ProseMirror code { background: #f1f5f9; padding: 0 4px; border-radius: 3px; font-size: 0.85em; }
+
 /* Kanban card dragging */
 .kanban-card { transition: border-color 150ms ease, box-shadow 150ms ease; }
 .kanban-card:hover { border-color: #93c5fd; }

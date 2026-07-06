@@ -38,3 +38,15 @@ Alle 16 acceptkriterier fra § 20 er opfyldt.
 - Fristoverblik, rapport-eksport
 - Skabeloner for logbogsposter
 - Notifikationer / påmindelser om opfølgningsfrister
+
+## Update (2026-02) — Logbog-redesign
+Efter brugerfeedback om at logbogen skal kunne bruges under aktive Teams-møder:
+
+- **Sheet-panel** (Shadcn Sheet fra højre) erstatter modal-dialog. Klik-udenfor lukker IKKE, Esc lukker IKKE.
+- **Auto-save**: Debounced (1.2s) skrivning til backend som `draft: true`. Live "Gemt kl. HH:MM:SS"-indikator.
+- **Progressiv formular**: Basisfelter (Titel, Dato, System, Type, Emne, Resumé, Detaljer) synlige. Ekstra felter (Beslutning, Opfølgning, Frist, Kontakt, Organisation, Officielt link) skjult bag "Vis flere felter".
+- **TipTap rig-tekst editor** på `detaljer`-feltet: Fed, kursiv, H2/H3, punktopstilling, nummereret liste, citat, kode, undo/redo. Markdown-genveje (`**fed**`, `- liste`, `## overskrift`).
+- **Aktiv note-pill** i sidebar viser titel på aktiv kladde og genåbner den ved klik.
+- **Ctrl+K globalt**: Åbner ny logbogspost fra alle sider.
+- **"Kladde"-badge** synlig i logbogslisten (subtil amber styling) så man ikke glemmer draftposter.
+- Backend: `LogEntryModel.draft: bool` felt tilføjet.
