@@ -64,7 +64,7 @@ function KontakterSektion({ systemId, contacts, orgs, onReload }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState(null);
 
-  const load = () => api.systemContacts(systemId).then(setRels);
+  const load = () => { api.systemContacts(systemId).then(setRels); };
   useEffect(load, [systemId]);
 
   const filtered = rels.filter(r => kategoriF === "__all__" || r.kategori === kategoriF);
