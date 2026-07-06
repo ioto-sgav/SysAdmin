@@ -50,3 +50,20 @@ Efter brugerfeedback om at logbogen skal kunne bruges under aktive Teams-møder:
 - **Ctrl+K globalt**: Åbner ny logbogspost fra alle sider.
 - **"Kladde"-badge** synlig i logbogslisten (subtil amber styling) så man ikke glemmer draftposter.
 - Backend: `LogEntryModel.draft: bool` felt tilføjet.
+
+## Update (2026-02) — Lokal desktop-migration
+Krav fra dansk offentlig styrelse: data må KUN gemmes lokalt på arbejds-PC.
+
+### Phase 1: MongoDB → SQLite (færdig, verificeret 100%)
+- **/app/backend/sqlite_adapter.py**: Motor-kompatibel wrapper (find/find_one/insert_one/update_one/delete_one/count_documents). Storage: én tabel per kollektion, rows = (id TEXT PK, data JSON). Understøtter equality queries og `$or`.
+- **/app/backend/server.py**: kun linje 1-19 ændret (motor → sqlite_adapter). Alt andet uændret.
+- **SQLITE_DB_PATH env-var**: brugerdefineret placering (default: ./data/systemforvalter.db). Auto-oprettes.
+- Frontend 100% uændret.
+- Git tags: `v1-cloud-mongodb` (rollback-punkt) og `v2-local-sqlite`.
+
+### Phase 2: Lokal installation (færdig)
+- **/app/README.md**: Fuld guide til Windows/macOS/Linux med Python 3.11+, Node 20+, yarn. SQLite-fil-placering (bruger vælger selv). Backup via kopi af `.db`-fil.
+
+### Phase 3: Tauri desktop-app (skabelon)
+- **/app/src-tauri/README.md**: Trinvis guide til at pakke som `.exe`/`.dmg`/`.deb` (~10 MB). PyInstaller til backend-binær, Tauri sidecar-config, `SQLITE_DB_PATH` per-OS (%APPDATA%, Application Support, .local/share).
+- Faktisk Tauri-init skal køres lokalt (kræver Rust-toolchain, kan ikke gøres i Emergent-container).
