@@ -23,6 +23,9 @@ export function LogEntryProvider({ children }) {
     setRefs({ systems, contacts, orgs });
   }, [refs]);
 
+  // Preload reference data on mount so system pre-selection works instantly
+  useEffect(() => { ensureRefs(); }, [ensureRefs]);
+
   const openNew = useCallback((systemId = null) => {
     ensureRefs();
     setEntryId(null);

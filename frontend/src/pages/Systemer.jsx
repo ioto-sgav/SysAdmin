@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { api, SYSTEM_STATUSES, KRITIKALITET } from "../lib/api";
 import { Button } from "../components/ui/button";
@@ -11,6 +11,7 @@ import { Plus, ChevronRight } from "lucide-react";
 import EntityDialog from "../components/EntityDialog";
 
 export default function Systemer() {
+  const navigate = useNavigate();
   const [systems, setSystems] = useState([]);
   const [orgs, setOrgs] = useState([]);
   const [q, setQ] = useState("");
@@ -101,16 +102,21 @@ export default function Systemer() {
             {filtered.length === 0 ? (
               <TableRow><TableCell colSpan={7} className="text-center py-8 text-slate-500">Ingen systemer.</TableCell></TableRow>
             ) : filtered.map(s => (
-              <TableRow key={s.id} className="hover:bg-slate-50" data-testid={`system-row-${s.id}`}>
+              <TableRow
+                key={s.id}
+                className="hover:bg-blue-50/40 cursor-pointer"
+                onClick={() => navigate(`/systemer/${s.id}`)}
+                data-testid={`system-row-${s.id}`}
+              >
                 <TableCell>
-                  <Link to={`/systemer/${s.id}`} className="font-medium text-slate-900 hover:text-blue-700">{s.navn}</Link>
+                  <Link to={`/systemer/${s.id}`} onClick={(e) => e.stopPropagation()} className="font-medium text-slate-900 hover:text-blue-700">{s.navn}</Link>
                 </TableCell>
                 <TableCell><StatusBadge value={s.status} /></TableCell>
                 <TableCell><KritikalitetBadge value={s.kritikalitet} /></TableCell>
                 <TableCell className="text-slate-600">{orgMap[s.leverandor_id]?.navn || "—"}</TableCell>
                 <TableCell className="text-slate-600">{orgMap[s.driftsleverandor_id]?.navn || "—"}</TableCell>
                 <TableCell className="text-slate-600">{s.systemejer || "—"}</TableCell>
-                <TableCell><Link to={`/systemer/${s.id}`}><ChevronRight className="h-4 w-4 text-slate-400" /></Link></TableCell>
+                <TableCell><ChevronRight className="h-4 w-4 text-slate-400" /></TableCell>
               </TableRow>
             ))}
           </TableBody>

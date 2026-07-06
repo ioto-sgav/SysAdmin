@@ -31,7 +31,7 @@ export default function EntityDialog({ open, onOpenChange, title, fields, initia
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg rounded-md" data-testid={`${testidPrefix}-dialog`}>
+      <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto rounded-md" data-testid={`${testidPrefix}-dialog`}>
         <DialogHeader><DialogTitle className="font-heading">{title}</DialogTitle></DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           {fields.map((f) => (

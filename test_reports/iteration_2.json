@@ -1,0 +1,34 @@
+{
+  "summary": "Frontend regression test after Logbog redesign bug-fix iteration. 6/9 checks passed. Critical blocker: /opgaver page crashes with 'openCreateSignal is not defined' ReferenceError in KanbanBoard, blocking BUG-5/8a/8b verification. BUG-2 pre-selected system could not be verified because the embedded 'opret-log-btn-embedded' button was not found on system detail page (Logbog accordion may need explicit opening or button testid missing).",
+  "tested_scope": ["frontend"],
+  "passed": [
+    "Frontend loads at REACT_APP_BACKEND_URL",
+    "BUG-1 Sheet width: log-sheet width = 1056px on 1920 viewport (>= 700px target)",
+    "BUG-3 Rich text list spacing: 3 <li> rendered, inter-li gap = 0px, li>p margin-bottom = 0px",
+    "BUG-4 Systemer row click: clicking status cell of first row navigates to /systemer/{id}",
+    "BUG-6 Annullér: sheet closes and draft entry is removed from log list after confirm",
+    "BUG-7 New system dialog scrolling: [role=dialog] has overflow-y:auto, max-height 918px, system-form-submit reachable/visible"
+  ],
+  "failed": [
+    {
+      "area": "Opgaver page runtime error (blocks BUG-5, BUG-8a, BUG-8b)",
+      "issue": "Uncaught ReferenceError: openCreateSignal is not defined in KanbanBoard component. Page renders error overlay, no kanban columns/buttons available.",
+      "evidence": "Console stack: at KanbanBoard (bundle.js:761:7). Screenshot shows red 'Uncaught runtime errors: openCreateSignal is not defined' overlay on /opgaver.",
+      "priority": "HIGH"
+    },
+    {
+      "area": "BUG-2 pre-selected system",
+      "issue": "'opret-log-btn-embedded' button not found on /systemer/{id} page. Could not open embedded log sheet to verify pre-selection.",
+      "evidence": "page.locator(\"[data-testid='opret-log-btn-embedded']\").count() == 0 after landing on system detail. Tried clicking 'Logbog' text to open accordion — button still absent. Cannot confirm if button is missing, renamed, or hidden behind a collapsed accordion without a testid.",
+      "priority": "HIGH"
+    }
+  ],
+  "action_items": [
+    "Fix KanbanBoard.jsx: `openCreateSignal` prop is referenced but not defined/destructured — likely missing from props destructuring or parent (Opgaver.jsx) is not passing it. This must be fixed before /opgaver is usable.",
+    "After Kanban fix, re-verify BUG-5 (equal-height content-adaptive columns), BUG-8a (opret-opgave-btn opens dialog with opgave-form-system_id), BUG-8b (opgaver-filter-system dropdown filters tasks).",
+    "For BUG-2: ensure 'opret-log-btn-embedded' data-testid actually renders on /systemer/{id}. If it lives inside a collapsed accordion, add a testid to the accordion trigger (e.g. 'logbog-accordion-trigger') so it can be opened deterministically, or render the button when expanded=true."
+  ],
+  "success_rate": {"backend": "not tested", "frontend": "66% (6/9 bug fixes verified, 1 hard crash, 1 unverifiable)"},
+  "retest_needed": true,
+  "full_testing_deferred": true
+}

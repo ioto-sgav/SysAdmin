@@ -107,10 +107,10 @@ export default function LogEntrySheet({ open, onOpenChange, entryId, setEntryId,
   };
 
   const discardDraft = async () => {
-    if (!currentIdRef.current) { onOpenChange(false); return; }
-    if (!window.confirm("Kassér denne kladde?")) return;
+    if (!currentIdRef.current) { onClearActive?.(); onOpenChange(false); return; }
+    if (!window.confirm("Fortryd og slet kladde?")) return;
     await api.remove("log_entries", currentIdRef.current);
-    toast.success("Kladde kasseret");
+    toast.success("Kladde annulleret");
     onClearActive?.();
     onSaved?.();
     onOpenChange(false);
@@ -132,7 +132,7 @@ export default function LogEntrySheet({ open, onOpenChange, entryId, setEntryId,
     <Sheet open={open} onOpenChange={(v) => { if (!v) closeMinimize(); else onOpenChange(true); }}>
       <SheetContent
         side="right"
-        className="w-full sm:max-w-xl overflow-y-auto p-0 rounded-none"
+        className="w-full sm:max-w-[720px] md:w-[55vw] md:max-w-[55vw] overflow-y-auto p-0 rounded-none"
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
         data-testid="log-sheet"
@@ -255,11 +255,9 @@ export default function LogEntrySheet({ open, onOpenChange, entryId, setEntryId,
         </div>
 
         <div className="sticky bottom-0 bg-white border-t border-slate-200 px-6 py-3 flex items-center gap-2">
-          {values.draft && currentIdRef.current && (
-            <button onClick={discardDraft} className="text-slate-500 hover:text-red-600 p-2" title="Kassér kladde" data-testid="log-sheet-discard">
-              <Trash2 className="h-4 w-4" />
-            </button>
-          )}
+          <Button variant="ghost" onClick={discardDraft} className="text-red-600 hover:text-red-700 hover:bg-red-50" data-testid="log-sheet-annuller">
+            <Trash2 className="h-4 w-4 mr-1" /> Annullér
+          </Button>
           <div className="ml-auto flex gap-2">
             <Button variant="outline" onClick={closeMinimize} data-testid="log-sheet-minimize">Minimer</Button>
             <Button onClick={finalize} className="bg-blue-700 hover:bg-blue-800" data-testid="log-sheet-finalize">Færdiggør</Button>

@@ -34,7 +34,26 @@ export default function KanbanBoard({ systemId = null, systems = [], onReload })
   };
   useEffect(load, [systemId]);
 
+  // Allow parent to trigger "new task" dialog
+  useEffect(() => {
+    if (openCreateSignal > 0) {
+      setEditingTask(null);
+      setInitialColumn(columns[0]?.navn || "Todo");
+      setDialogOpen(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openCreateSignal]);
+
   const systemMap = useMemo(() => Object.fromEntries(systems.map(s => [s.id, s])), [systems]);
+
+  // Apply optional system filter for non-scoped boards
+  const visibleTasks = systemId
+    ? tasks
+    : (systemFilter === "__none__"
+        ? tasks.filter(t => !t.system_id)
+        : (systemFilter && systemFilter !== "__all__"
+            ? tasks.filter(t => t.system_id === systemFilter)
+            : tasks));
 
   const addColumn = async () => {
     const navn = newColName.trim();
@@ -139,14 +158,14 @@ export default function KanbanBoard({ systemId = null, systems = [], onReload })
         <Button variant="outline" onClick={addColumn} data-testid="kanban-tilfoej-kolonne"><Plus className="h-4 w-4 mr-1" /> Tilføj kolonne</Button>
       </div>
 
-      <div className="grid grid-flow-col auto-cols-[280px] gap-4 overflow-x-auto pb-4" data-testid="kanban-board">
+      <div className="grid grid-flow-col auto-cols-[280px] gap-4 overflow-x-auto pb-4 items-stretch" data-testid="kanban-board">
         {columns.map(col => {
-          const colTasks = tasks.filter(t => t.kanban_kolonne === col.navn);
+          const colTasks = visibleTasks.filter(t => t.kanban_kolonne === col.navn);
           const dragOver = dragOverCol === col.navn;
           return (
             <div
               key={col.id}
-              className={`kanban-col bg-slate-100/70 rounded-md p-4 min-h-[500px] ${dragOver ? "drag-over" : ""}`}
+              className={`kanban-col bg-slate-100/70 rounded-md p-4 flex flex-col ${dragOver ? "drag-over" : ""}`}
               onDragOver={(e) => onDragOver(e, col.navn)}
               onDragLeave={() => setDragOverCol(null)}
               onDrop={(e) => onDrop(e, col.navn)}
