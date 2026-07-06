@@ -1,0 +1,94 @@
+{
+  "theme": "light",
+  "archetype": "Archetype 4 (Swiss & High-Contrast) / Nordic Public Sector (Calm, Professional, Trustworthy)",
+  "language": "da-DK",
+  "typography": {
+    "heading_font": "Work Sans",
+    "body_font": "IBM Plex Sans",
+    "hierarchy": {
+      "h1": "text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900",
+      "h2": "text-2xl sm:text-3xl font-medium tracking-tight text-slate-800",
+      "h3": "text-xl font-medium text-slate-800",
+      "h4": "text-lg font-medium text-slate-800",
+      "body": "text-sm sm:text-base text-slate-600 leading-relaxed",
+      "small": "text-xs text-slate-500 uppercase tracking-wider font-medium"
+    }
+  },
+  "colors": {
+    "background": "bg-stone-50",
+    "surface": "bg-white",
+    "surface_hover": "hover:bg-slate-50",
+    "border": "border-slate-200",
+    "primary_action": "bg-blue-700 text-white hover:bg-blue-800",
+    "secondary_action": "bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 hover:text-slate-900",
+    "text_primary": "text-slate-900",
+    "text_secondary": "text-slate-600",
+    "sidebar": "bg-white border-r border-slate-200",
+    "status": {
+      "success": "bg-emerald-100 text-emerald-800 border-emerald-200",
+      "warning": "bg-amber-100 text-amber-800 border-amber-200",
+      "error": "bg-red-100 text-red-800 border-red-200",
+      "info": "bg-blue-100 text-blue-800 border-blue-200",
+      "neutral": "bg-slate-100 text-slate-700 border-slate-200"
+    }
+  },
+  "layout_and_spacing": {
+    "philosophy": "Kompakte, men læsbare sektioner. Tilstrækkelig indvendig luft i kasser.",
+    "sidebar": "w-64 h-screen fixed inset-y-0 left-0 border-r border-slate-200 bg-white flex flex-col z-40.",
+    "main_content": "ml-64 p-6 md:p-8 min-h-screen bg-stone-50",
+    "card_spacing": "p-6 rounded-md border border-slate-200 bg-white shadow-sm",
+    "border_radius": "rounded-md",
+    "grid_system": "grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+  },
+  "components": {
+    "dashboard_cards": {
+      "description": "KPI-kort for åbne opgaver, forsinkede opgaver, opfølgningsfrister, systemer.",
+      "style": "bg-white border border-slate-200 rounded-md p-6 shadow-sm flex flex-col gap-2. Brug Lucide-ikoner (text-slate-400)."
+    },
+    "tables": {
+      "description": "Systemoversigt og Kontakter. Søgbar og filterbar.",
+      "style": "w-full text-left text-sm. Header: text-xs uppercase tracking-wider text-slate-500 bg-slate-50 border-b border-slate-200 py-3 px-4. Rows: border-b border-slate-100 hover:bg-slate-50 py-3 px-4."
+    },
+    "accordion": {
+      "description": "Systemdetaljeside med sammenklappelige sektioner.",
+      "style": "Shadcn Accordion. border-b border-slate-200. Header text-lg font-medium text-slate-800. Indhold skal have tilstrækkelig indvendig padding (p-4 til p-6)."
+    },
+    "kanban_board": {
+      "description": "Til opgaver med Todo, Doing, Done kolonner.",
+      "style": "Kolonner: bg-slate-100/70 rounded-md p-4 min-h-[500px]. Kort: bg-white p-4 rounded border border-slate-200 shadow-sm cursor-grab hover:border-blue-300 transition-colors."
+    },
+    "badges": {
+      "description": "Til status, kritikalitet og prioritet.",
+      "style": "rounded px-2.5 py-0.5 text-xs font-medium border"
+    },
+    "modals_sheets": {
+      "description": "Oprettelse og redigering af entiteter.",
+      "style": "Shadcn Dialog/Sheet. Brug fortrinsvis Sheet (right) til at vise detaljer for ikke at miste dashboard-kontekst. Overlay: bg-slate-900/40 backdrop-blur-sm."
+    }
+  },
+  "media": {
+    "icons_library": "lucide-react",
+    "image_urls": [
+      {
+        "url": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODF8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBhdmF0YXIlMjBwb3J0cmFpdCUyMGJhY2tncm91bmR8ZW58MHx8fHwxNzgzMzE5ODU4fDA&ixlib=rb-4.1.0&q=85",
+        "description": "Professional avatar photo for user profile in the sidebar or top header",
+        "category": "avatar"
+      }
+    ]
+  },
+  "accessibility_and_testing": {
+    "data_testid": "ALL interactive elements MUST include data-testid attribute with kebab-case, role-based naming (e.g., dashboard-nav-link, add-task-button, system-table-row)."
+  },
+  "instructions_to_main_agent": [
+    "Alt UI skal være på dansk.",
+    "Brug KUN .js eller .jsx filer, ikke .tsx (typescript er ikke opsat).",
+    "Brug 'Work Sans' font til overskrifter og 'IBM Plex Sans' til brødtekst. Importer dem i CSS via Google Fonts.",
+    "Implementer en fast (fixed/sticky) sidebar til venstre. Hovedindholdet skal have en 'ml-64' så det ikke overlapper.",
+    "Grænsefladen skal holdes rolig, ren og professionel i tråd med en dansk offentlig myndighed. Brug 'rounded-md', undgå 'rounded-2xl' og ekstreme gradients.",
+    "Brug de dæmpede nordiske farver defineret ovenfor: bg-stone-50 til app baggrund, bg-white til kort, blue-700 til primære knapper.",
+    "Implementer Shadcn UI komponenter (Cards, Accordion, Dialog, Sheet, Tabs, Table). Husk at fjerne eventuel 'rounded-xl' styling fra standard shadcn config for at overholde designkrav.",
+    "Implementer Kanban-boardet til opgaver. Dette kan bygges med dnd-kit eller rent med state, hvis drag and drop driller i miljøet. Sikr kolonner til Todo, Doing og Done.",
+    "Tilføj altid `data-testid` attributter til knapper, links og form elementer for at muliggøre robust testning.",
+    "Overblik frem for administrativ tyngde: Sikr at der er tilstrækkelig indvendig luft (padding) i alle elementer."
+  ]
+}
