@@ -159,5 +159,5 @@ class DB:
 def get_db():
     """Return DB instance based on SQLITE_DB_PATH env var (default: ./data/systemforvalter.db)."""
     default = str(Path(__file__).parent / "data" / "systemforvalter.db")
-    path = os.environ.get("SQLITE_DB_PATH", default)
+    path = os.environ.get("SQLITE_DB_PATH") or default
     return DB(path)

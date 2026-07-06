@@ -1,0 +1,20 @@
+{
+  "summary": "Backend-only verification after requirements.txt cleanup and SQLITE_DB_PATH fix. All checks passed.",
+  "tested_scope": ["backend", "integration"],
+  "passed": [
+    "requirements.txt contains exactly 6 packages: fastapi, uvicorn, python-dotenv, pydantic, aiosqlite, starlette — no emergentintegrations/litellm/motor/customer-assets URLs",
+    "GET /api/dashboard returns antal_systemer=3 (non-zero KPI, empty SQLITE_DB_PATH bug confirmed fixed)",
+    "GET /api/systems returns 3 systems including 'Ydelsessystem'",
+    "GET /api/organizations returns 4",
+    "GET /api/contacts returns 4",
+    "GET /api/tasks returns 5",
+    "GET /api/log_entries returns 3",
+    "CRUD roundtrip on /api/organizations: POST 200 with id, PUT 200 with updated navn, DELETE 200 {ok:true}",
+    "GET /api/systems/{id}/contacts returns enriched objects with nested 'contact' and 'organization' keys"
+  ],
+  "failed": [],
+  "action_items": [],
+  "success_rate": {"backend": "100%", "frontend": "not tested (per request)"},
+  "retest_needed": false,
+  "full_testing_deferred": true
+}
