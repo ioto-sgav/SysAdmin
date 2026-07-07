@@ -25,6 +25,7 @@ jobs:
       run: npm install -g yarn
 
     - name: Install frontend dependencies and build
+      shell: bash
       run: |
         cd frontend
         echo "REACT_APP_BACKEND_URL=" > .env
