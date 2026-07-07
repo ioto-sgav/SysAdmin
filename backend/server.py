@@ -1,3 +1,4 @@
+import sys
 from fastapi import FastAPI, APIRouter, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -436,12 +437,18 @@ async def shutdown_db_client():
     pass
 
 # ----- Serve Frontend (Desktop App Mode) -----
-# This tells FastAPI to serve the compiled React files
-frontend_path = ROOT_DIR.parent / "frontend" / "build"
+# Determine the correct path for the frontend files
+if getattr(sys, 'frozen', False):
+    # If running inside a PyInstaller .exe bundle
+    bundle_dir = Path(sys._MEIPASS)
+    frontend_path = bundle_dir / "frontend" / "build"
+else:
+    # If running normally on your Mac/PC for development
+    frontend_path = ROOT_DIR.parent / "frontend" / "build"
+
 if frontend_path.exists():
     app.mount("/static", StaticFiles(directory=frontend_path / "static"), name="static")
 
     @app.get("/{full_path:path}")
     async def serve_frontend(full_path: str):
-        # This catch-all route serves index.html so React Router can handle the page
         return FileResponse(frontend_path / "index.html")
