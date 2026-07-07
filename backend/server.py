@@ -1,4 +1,6 @@
 from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 import os
@@ -432,3 +434,14 @@ async def startup_seed():
 async def shutdown_db_client():
     # SQLite: nothing persistent to close (connections opened per-op)
     pass
+
+# ----- Serve Frontend (Desktop App Mode) -----
+# This tells FastAPI to serve the compiled React files
+frontend_path = ROOT_DIR.parent / "frontend" / "build"
+if frontend_path.exists():
+    app.mount("/static", StaticFiles(directory=frontend_path / "static"), name="static")
+
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str):
+        # This catch-all route serves index.html so React Router can handle the page
+        return FileResponse(frontend_path / "index.html")

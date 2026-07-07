@@ -4,3 +4,5 @@ python-dotenv==1.1.1
 pydantic==2.11.9
 aiosqlite==0.22.1
 starlette==0.48.0
+pywebview==5.3
+pyinstaller==6.10.0

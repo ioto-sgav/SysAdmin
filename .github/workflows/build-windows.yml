@@ -1,0 +1,48 @@
+name: Build Windows Desktop App
+
+on:
+  workflow_dispatch: # This lets you trigger it manually from GitHub
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: Install Yarn
+      run: npm install -g yarn
+
+    - name: Install frontend dependencies and build
+      run: |
+        cd frontend
+        echo "REACT_APP_BACKEND_URL=" > .env
+        yarn install
+        yarn build
+
+    - name: Install backend dependencies
+      run: |
+        cd backend
+        pip install -r requirements.txt
+
+    - name: Build Windows Executable
+      run: |
+        cd backend
+        pyinstaller --noconfirm --onefile --windowed --add-data "../frontend/build:frontend/build" desktop.py
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: SysAdmin-Windows-App
+        path: backend/dist/desktop.exe
