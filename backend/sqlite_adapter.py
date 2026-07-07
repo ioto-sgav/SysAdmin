@@ -15,6 +15,7 @@ Supports simple equality queries + {"$or": [...]}.
 import aiosqlite
 import json
 import os
+import sys
 from pathlib import Path
 
 
@@ -155,9 +156,60 @@ class DB:
             raise AttributeError(name)
         return Collection(self, name)
 
+def get_app_dir():
+    """
+    Returnerer mappen hvor exe-filen ligger, hvis appen er pakket.
+    Ellers returneres mappen hvor sqlite_adapter.py ligger.
+    """
+    if getattr(sys, "frozen", False):
+        return Path(sys.executable).parent
+
+    return Path(__file__).parent
+
+
+def get_config_path():
+    """
+    Returnerer stien til config.json ved siden af exe-filen/kildekoden.
+    """
+    return get_app_dir() / "config.json"
+
+
+def get_db_path_from_config():
+    """
+    Læser sqlite_db_path fra config.json.
+    Appen kræver, at config.json findes og indeholder sqlite_db_path.
+    """
+    config_path = get_config_path()
+
+    if not config_path.exists():
+        raise RuntimeError(
+            f"config.json blev ikke fundet. Forventet placering: {config_path}"
+        )
+
+    try:
+        with open(config_path, "r", encoding="utf-8") as f:
+            config = json.load(f)
+    except Exception as e:
+        raise RuntimeError(f"Kunne ikke læse config.json: {e}")
+
+    db_path = config.get("sqlite_db_path")
+
+    if not db_path:
+        raise RuntimeError(
+            "config.json mangler feltet 'sqlite_db_path'."
+        )
+
+    db_path = Path(db_path)
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+
+    return db_path
+
 
 def get_db():
-    """Return DB instance based on SQLITE_DB_PATH env var (default: ./data/systemforvalter.db)."""
-    default = str(Path(__file__).parent / "data" / "systemforvalter.db")
-    path = os.environ.get("SQLITE_DB_PATH") or default
+    """
+    Returnerer DB instance baseret udelukkende på config.json.
+    """
+    path = get_db_path_from_config()
+    print(f"SQLite database path: {path}")
     return DB(path)
+
